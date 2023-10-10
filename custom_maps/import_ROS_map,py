@@ -1,0 +1,45 @@
+import os
+import os.path as osp
+import shutil
+import json
+import csv
+
+def convert_wayponts_list_to_csv(waypoints_list, export_dir_path):
+    export_file_path =  export_dir_path + '/' + 'global_waypoints.csv' 
+    key_list = ['s_m', 'x_m', 'y_m', 'psi_rad', 'kappa_radpm', 'vx_mps', 'ax_mps2']
+    reduced_waypoints_list = []
+    for waypoint in waypoints_list:
+        reduced_waypoint = dict((k, waypoint[k]) for k in key_list)
+        reduced_waypoints_list.append(reduced_waypoint)
+    keys = reduced_waypoints_list[0].keys()
+
+    with open(export_file_path, 'w', newline='') as output_file:
+        output_file.write("# The map name is '$mapname'\n")
+        output_file.write("# The waypoints are from the optimal race line.\n")
+        dict_writer = csv.DictWriter(output_file, keys, delimiter=';')
+        dict_writer.writeheader()
+        dict_writer.writerows(reduced_waypoints_list)
+
+
+map_convertor_dir_path = os.path.dirname(os.path.realpath(__file__))
+map_import_dir_path = map_convertor_dir_path + '/map_imported'
+map_export_dir_path = map_convertor_dir_path + '/map_exported'
+
+maps_to_import_list = [name for name in os.listdir(map_import_dir_path) if os.path.isdir(os.path.join(map_import_dir_path, name))]
+
+current_map_name = maps_to_import_list[0]
+current_map_import_dir_path =  map_import_dir_path + '/' + current_map_name
+current_map_export_dir_path = map_export_dir_path + '/' + current_map_name
+
+if not osp.exists(current_map_export_dir_path):
+    os.mkdir(current_map_export_dir_path)
+
+files_to_be_copied = ['/' + current_map_name + '.png', '/' + current_map_name + '.yaml']
+for file in files_to_be_copied:
+    shutil.copy(current_map_import_dir_path + file, current_map_export_dir_path + file)
+
+global_waypoints_dir_path =  current_map_import_dir_path + '/global_waypoints.json'
+global_waypoints_data = json.load(open(global_waypoints_dir_path))
+waypoints_to_be_saved_list = global_waypoints_data['global_traj_wpnts_iqp']['wpnts']
+
+convert_wayponts_list_to_csv(waypoints_to_be_saved_list, current_map_export_dir_path)
