@@ -27,19 +27,20 @@ map_export_dir_path = map_convertor_dir_path + '/map_exported'
 
 maps_to_import_list = [name for name in os.listdir(map_import_dir_path) if os.path.isdir(os.path.join(map_import_dir_path, name))]
 
-current_map_name = maps_to_import_list[0]
-current_map_import_dir_path =  map_import_dir_path + '/' + current_map_name
-current_map_export_dir_path = map_export_dir_path + '/' + current_map_name
+for current_map_name in maps_to_import_list:
+    current_map_import_dir_path =  map_import_dir_path + '/' + current_map_name
+    current_map_export_dir_path = map_export_dir_path + '/' + current_map_name
 
-if not osp.exists(current_map_export_dir_path):
-    os.mkdir(current_map_export_dir_path)
+    if not osp.exists(current_map_export_dir_path):
+        os.mkdir(current_map_export_dir_path)
 
-files_to_be_copied = ['/' + current_map_name + '.png', '/' + current_map_name + '.yaml']
-for file in files_to_be_copied:
-    shutil.copy(current_map_import_dir_path + file, current_map_export_dir_path + file)
+    files_to_be_copied = ['/' + current_map_name + '.png', '/' + current_map_name + '.yaml']
+    for file in files_to_be_copied:
+        shutil.copy(current_map_import_dir_path + file, current_map_export_dir_path + file)
 
-global_waypoints_dir_path =  current_map_import_dir_path + '/global_waypoints.json'
-global_waypoints_data = json.load(open(global_waypoints_dir_path))
-waypoints_to_be_saved_list = global_waypoints_data['global_traj_wpnts_iqp']['wpnts']
+    global_waypoints_dir_path =  current_map_import_dir_path + '/global_waypoints.json'
+    global_waypoints_data = json.load(open(global_waypoints_dir_path))
+    selected_trajectory = 'global_traj_wpnts_iqp'
+    waypoints_to_be_saved_list = global_waypoints_data[selected_trajectory]['wpnts']
 
-convert_wayponts_list_to_csv(waypoints_to_be_saved_list, current_map_export_dir_path)
+    convert_wayponts_list_to_csv(waypoints_to_be_saved_list, current_map_export_dir_path)
