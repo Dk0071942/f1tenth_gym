@@ -3,6 +3,7 @@ from f110_gym.envs.base_classes import Integrator
 import yaml
 import gym
 import numpy as np
+import os
 from argparse import Namespace
 
 from numba import njit
@@ -244,7 +245,7 @@ def main():
     """
 
     work = {'mass': 3.463388126201571, 'lf': 0.15597534362552312, 'tlad': 0.82461887897713965, 'vgain': 1.375}#0.90338203837889}
-    
+
     with open('config_example_map.yaml') as file:
         conf_dict = yaml.load(file, Loader=yaml.FullLoader)
     conf = Namespace(**conf_dict)
@@ -284,7 +285,7 @@ def main():
         laptime += step_reward
         env.render(mode='human')
         
-    print('Sim elapsed time:', laptime, 'Real elapsed time:', time.time()-start)
+    -print('Sim elapsed time:', laptime, 'Real elapsed time:', time.time()-start)
 
 if __name__ == '__main__':
     main()
