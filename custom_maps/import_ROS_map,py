@@ -27,6 +27,8 @@ map_export_dir_path = map_convertor_dir_path + '/map_exported'
 
 maps_to_import_list = [name for name in os.listdir(map_import_dir_path) if os.path.isdir(os.path.join(map_import_dir_path, name))]
 
+
+# TODO: wrap everything in a function
 for current_map_name in maps_to_import_list:
     current_map_import_dir_path =  map_import_dir_path + '/' + current_map_name
     current_map_export_dir_path = map_export_dir_path + '/' + current_map_name
@@ -40,6 +42,8 @@ for current_map_name in maps_to_import_list:
 
     global_waypoints_dir_path =  current_map_import_dir_path + '/global_waypoints.json'
     global_waypoints_data = json.load(open(global_waypoints_dir_path))
+    trajectory_options_list = ['global_traj_wpnts_sp', 'global_traj_wpnts_iqp', 'centerline_waypoints']
+    # TODO: write a funtion which can select trajectory based on the given arguments.
     selected_trajectory = 'global_traj_wpnts_iqp'
     waypoints_to_be_saved_list = global_waypoints_data[selected_trajectory]['wpnts']
 
